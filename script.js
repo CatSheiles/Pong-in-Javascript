@@ -1,6 +1,7 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 window.addEventListener('keydown', function(e) {keydown(e)}, false);
+window.addEventListener("keyup", function(e) {keyup(e)}, false);
 
 let ballx = 20; /*Starting positions for ball x and ball y */
 let bally = 20;
@@ -14,6 +15,9 @@ let score = 0;
 
 ctx.fillStyle = "purple";
 
+let isPushingUp = false;
+let isPushingDown = false;
+
 /*Pong ball draw the ball and start the loop */
 ctx.fillRect (ballx, bally, 20, 20);
 ctx.fillRect (batx, baty, 10, 50);
@@ -23,11 +27,24 @@ function keydown(bat) /*Changing bats position when keyup or keydown pressed */
 {
     if(bat.key == 'ArrowDown')
     {
-        if(baty <= canvas.height - 50) baty += 20; /*bat speed */
+        //if(baty <= canvas.height - 50) baty += 20; /*bat speed */
+        isPushingDown = true;
     }
     if(bat.key == "ArrowUp")
     {
-        if(baty > 0) baty -= 10;
+        //if(baty > 0) baty -= 10;
+        isPushingUp = true;
+    }
+}
+
+function keyup(bat){
+    if(bat.key == "ArrowDown"){
+        isPushingDown = false;
+    }
+
+    if(bat.key == "ArrowUp")
+    {
+        isPushingUp = false;
     }
 }
 
@@ -39,6 +56,9 @@ function loop() {
 
     ctx.font = "30px Arial"; /*Score */
     ctx.fillText(score.toString(), 10, 50);
+
+    if(isPushingDown) if(baty <= canvas.height - 50) baty += 5; /*bat speed */
+    if(isPushingUp) if(baty > 0) baty -= 5; //is pushingup and down makes bat keying smoother
 
     ballx += vecX; /*Updating balls position or making it mooooove */
     bally += vecY;
